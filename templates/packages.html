@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,65 +14,71 @@
 
         .packages-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            max-width: 1400px;
-            margin: 50px auto;
-            padding: 0 20px;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 48px;
+            max-width: 1500px;
+            margin: 70px auto 70px auto;
+            padding: 0 32px;
         }
 
         .package-card {
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 31, 91, 0.15);
-            border: 3px solid #e60000;
-            padding: 30px 25px;
+            background: linear-gradient(135deg, #fff 80%, #f7f7ff 100%);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(0, 31, 91, 0.18), 0 2px 8px rgba(230,0,0,0.08);
+            border: 3.5px solid #e60000;
+            padding: 44px 32px 38px 32px;
             text-align: center;
             position: relative;
-            transition: transform 0.3s;
+            transition: transform 0.35s, box-shadow 0.35s;
+            margin-bottom: 24px;
         }
 
         .package-card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-16px) scale(1.03);
+            box-shadow: 0 16px 48px rgba(0, 31, 91, 0.22), 0 4px 16px rgba(230,0,0,0.12);
+            z-index: 2;
         }
 
         .package-card .badge {
             position: absolute;
-            top: -15px;
-            right: 20px;
-            background: #ffd700;
+            top: -22px;
+            right: 32px;
+            background: linear-gradient(90deg, #ffd700 70%, #fffbe6 100%);
             color: #001f5b;
-            padding: 10px 20px;
-            border-radius: 25px;
+            padding: 14px 28px;
+            border-radius: 32px;
             font-weight: bold;
-            font-size: 0.9em;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            font-size: 1.1em;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+            border: 2px solid #e60000;
         }
 
         .package-card h3 {
-            font-size: 2em;
+            font-size: 2.2em;
             color: #001f5b;
-            margin-bottom: 15px;
+            margin-bottom: 18px;
+            letter-spacing: 1px;
         }
 
         .package-card ul {
             list-style: none;
             padding: 0;
-            margin: 25px 0;
+            margin: 32px 0 0 0;
             text-align: left;
         }
 
         .package-card li {
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-            font-size: 1em;
+            padding: 14px 0;
+            border-bottom: 1.5px solid #f2f2f2;
+            font-size: 1.08em;
         }
 
         .package-card li:before {
             content: "✓ ";
             color: #e60000;
             font-weight: bold;
-            margin-right: 8px;
+            margin-right: 10px;
+            font-size: 1.1em;
         }
 
         .paypal-label {
@@ -152,6 +157,7 @@
                 <label for="email" style="font-weight:bold;">Unlock Your Free AI SEO Toolkit</label>
                 <input type="email" id="email" name="email" required placeholder="Enter your email to get instant access to our exclusive AI SEO Toolkit, bonus training, and a secret strategy guide (worth $299) – FREE!" style="width:100%;padding:10px;border-radius:6px;border:1.5px solid #e60000;font-size:1em;">
             </div>
+            <input type="hidden" id="package_id" name="package_id" value="1">
             <button type="submit" style="width:100%;background:#e60000;color:#fff;border:none;border-radius:6px;padding:12px;font-size:1.1em;font-weight:bold;cursor:pointer;">Get My Free Toolkit</button>
             <div style="margin-top:12px;color:#001f5b;font-size:0.98em;text-align:center;">No spam. Your free resources will be sent instantly!</div>
         </form>
@@ -161,12 +167,13 @@
             const first_name = document.getElementById('first_name').value;
             const username = document.getElementById('username').value;
             const email = document.getElementById('email').value;
-            fetch('/register', {
+            const package_id = document.getElementById('package_id').value;
+            fetch('http://127.0.0.1:5000/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ first_name, username, email })
+                body: JSON.stringify({ first_name, username, email, package_id })
             })
             .then(response => response.json())
             .then(data => {
@@ -180,52 +187,20 @@
     </div>
     <div class="packages-grid">
         <div class="package-card">
-            <div class="badge">Scale</div>
-            <h3>Starter 1000</h3>
-            <div class="original-price">Regular: $1,999</div>
-            <div class="promo-price">$1,000</div>
-            <ul>
-                <li>Everything in Empire</li>
-                <li>Enterprise-level resources for high-traffic sites</li>
-                <li>Priority onboarding & support</li>
-                <li>Daily web hosting for just $1,000/day after your first 3 referrals</li>
-                <li>Start with a one-time admin fee to activate</li>
-                <li style="color:#001f5b; font-size:1em; margin-top:10px;">This is a web hosting package.</li>
-            </ul>
-            <div class="paypal-label">Pay with PayPal</div>
-            <div class="paypal-button-container" id="paypal-starter1000"></div>
-        </div>
-        <div class="package-card">
-            <div class="badge" style="background:#001f5b; color:#ffd700;">Ultra</div>
-            <h3>Ultra 2000</h3>
-            <div class="original-price">Regular: $3,999</div>
-            <div class="promo-price">$2,000</div>
-            <ul>
-                <li>Everything in Starter 1000</li>
-                <li>Dedicated account manager</li>
-                <li>Custom infrastructure solutions</li>
-                <li>VIP onboarding & 24/7 support</li>
-                <li>Daily web hosting for just $2,000/day after your first 3 referrals</li>
-                <li>Start with a one-time admin fee to activate</li>
-                <li style="color:#001f5b; font-size:1em; margin-top:10px;">This is a web hosting package.</li>
-            </ul>
-            <div class="paypal-label">Pay with PayPal</div>
-            <div class="paypal-button-container" id="paypal-ultra2000"></div>
-        </div>
-        <div class="package-card">
             <div class="badge">Entry</div>
             <h3>Starter</h3>
             <div class="original-price">Regular: $49</div>
             <div class="promo-price">$20</div>
             <ul>
-                <li>Full access to dashboard</li>
-                <li>Affiliate link</li>
-                <li>Daily web hosting for just $20/day after your first 3 referrals</li>
+                <li><strong>10 GB SSD Storage</strong> – Perfect for new sites, blogs, or landing pages</li>
+                <li>Full access to dashboard and AI SEO Toolkit</li>
+                <li>Free SSL certificate for secure browsing</li>
+                <li>Daily backups to protect your data</li>
+                <li>24/7 support from our expert team</li>
                 <li>Start with a one-time admin fee to activate</li>
-                <li style="color:#001f5b; font-size:1em; margin-top:10px;">This is a web hosting package.</li>
+                <li style="color:#001f5b; font-size:1em; margin-top:10px;">Get started and grow with confidence!</li>
             </ul>
-            <div class="paypal-label">Pay with PayPal</div>
-            <div class="paypal-button-container" id="paypal-starter"></div>
+            <!-- Payment options hidden for public view -->
         </div>
         <div class="package-card">
             <div class="badge">Basic</div>
@@ -233,15 +208,15 @@
             <div class="original-price">Regular: $99</div>
             <div class="promo-price">$49</div>
             <ul>
-                <li>Everything in Starter</li>
-                <li>Priority support</li>
-                <li>Advanced training</li>
-                <li>Daily web hosting for just $49/day after your first 3 referrals</li>
+                <li><strong>25 GB SSD Storage</strong> – Ideal for growing businesses and content creators</li>
+                <li>Everything in Starter, plus advanced analytics</li>
+                <li>Priority support and onboarding</li>
+                <li>Access to exclusive training vault</li>
+                <li>Free domain for your first year</li>
                 <li>Start with a one-time admin fee to activate</li>
-                <li style="color:#001f5b; font-size:1em; margin-top:10px;">This is a web hosting package.</li>
+                <li style="color:#001f5b; font-size:1em; margin-top:10px;">Upgrade and unlock more power!</li>
             </ul>
-            <div class="paypal-label">Pay with PayPal</div>
-            <div class="paypal-button-container" id="paypal-basic"></div>
+            <!-- Payment options hidden for public view -->
         </div>
         <div class="package-card">
             <div class="badge">Pro</div>
@@ -249,15 +224,15 @@
             <div class="original-price">Regular: $199</div>
             <div class="promo-price">$99</div>
             <ul>
-                <li>Everything in Basic</li>
-                <li>Facebook Ads credit</li>
-                <li>Custom tracking</li>
-                <li>Daily web hosting for just $99/day after your first 3 referrals</li>
+                <li><strong>50 GB SSD Storage</strong> – For high-traffic sites and eCommerce</li>
+                <li>Everything in Basic, plus custom tracking tools</li>
+                <li>Facebook Ads credit to boost your reach</li>
+                <li>VIP support and dedicated account manager</li>
+                <li>Free migration assistance</li>
                 <li>Start with a one-time admin fee to activate</li>
-                <li style="color:#001f5b; font-size:1em; margin-top:10px;">This is a web hosting package.</li>
+                <li style="color:#001f5b; font-size:1em; margin-top:10px;">Go Pro and scale your business!</li>
             </ul>
-            <div class="paypal-label">Pay with PayPal</div>
-            <div class="paypal-button-container" id="paypal-pro"></div>
+            <!-- Payment options hidden for public view -->
         </div>
         <div class="package-card">
             <div class="badge">Elite</div>
@@ -265,15 +240,15 @@
             <div class="original-price">Regular: $499</div>
             <div class="promo-price">$299</div>
             <ul>
-                <li>Everything in Pro</li>
-                <li>VIP support</li>
-                <li>Elite training vault</li>
-                <li>Daily web hosting for just $299/day after your first 3 referrals</li>
+                <li><strong>100 GB SSD Storage</strong> – For agencies and large businesses</li>
+                <li>Everything in Pro, plus elite training vault</li>
+                <li>VIP support and white-glove onboarding</li>
+                <li>Access to exclusive webinars and masterminds</li>
+                <li>Priority placement in our referral program</li>
                 <li>Start with a one-time admin fee to activate</li>
-                <li style="color:#001f5b; font-size:1em; margin-top:10px;">This is a web hosting package.</li>
+                <li style="color:#001f5b; font-size:1em; margin-top:10px;">Elite status, elite results!</li>
             </ul>
-            <div class="paypal-label">Pay with PayPal</div>
-            <div class="paypal-button-container" id="paypal-elite"></div>
+            <!-- Payment options hidden for public view -->
         </div>
         <div class="package-card">
             <div class="badge">Empire</div>
@@ -281,190 +256,51 @@
             <div class="original-price">Regular: $999</div>
             <div class="promo-price">$499</div>
             <ul>
-                <li>Everything in Elite</li>
-                <li>White-glove onboarding</li>
-                <li>Empire masterclass</li>
-                <li>Daily web hosting for just $499/day after your first 3 referrals</li>
+                <li><strong>250 GB SSD Storage</strong> – Ultimate power for enterprise and high-volume sites</li>
+                <li>Everything in Elite, plus Empire masterclass</li>
+                <li>White-glove onboarding and migration</li>
+                <li>Direct access to our founders for strategy calls</li>
+                <li>Lifetime premium support</li>
                 <li>Start with a one-time admin fee to activate</li>
-                <li style="color:#001f5b; font-size:1em; margin-top:10px;">This is a web hosting package.</li>
+                <li style="color:#001f5b; font-size:1em; margin-top:10px;">Build your empire with us!</li>
             </ul>
-            <div class="paypal-label">Pay with PayPal</div>
-            <div class="paypal-button-container" id="paypal-empire"></div>
+            <!-- Payment options hidden for public view -->
+        </div>
+        <div class="package-card">
+            <div class="badge">Scale</div>
+            <h3>Starter 1000</h3>
+            <div class="original-price">Regular: $1,999</div>
+            <div class="promo-price">$1,000</div>
+            <ul>
+                <li><strong>500 GB SSD Storage</strong> – Enterprise-level resources for high-traffic sites</li>
+                <li>Everything in Empire, plus custom infrastructure solutions</li>
+                <li>Priority onboarding & support</li>
+                <li>Dedicated account manager</li>
+                <li>VIP access to platform upgrades</li>
+                <li>Start with a one-time admin fee to activate</li>
+                <li style="color:#001f5b; font-size:1em; margin-top:10px;">Scale your business to new heights!</li>
+            </ul>
+            <!-- Payment options hidden for public view -->
+        </div>
+        <div class="package-card">
+            <div class="badge" style="background:#001f5b; color:#ffd700;">Ultra</div>
+            <h3>Ultra 2000</h3>
+            <div class="original-price">Regular: $3,999</div>
+            <div class="promo-price">$2,000</div>
+            <ul>
+                <li><strong>1 TB SSD Storage</strong> – Unmatched capacity for the most demanding projects</li>
+                <li>Everything in Starter 1000, plus custom infrastructure solutions</li>
+                <li>Dedicated account manager and VIP onboarding</li>
+                <li>24/7 support with priority response</li>
+                <li>Direct line to our CTO for technical strategy</li>
+                <li>Start with a one-time admin fee to activate</li>
+                <li style="color:#001f5b; font-size:1em; margin-top:10px;">Go Ultra and dominate your market!</li>
+            </ul>
+            <!-- Payment options hidden for public view -->
         </div>
     </div>
-    <div style="max-width:1200px; margin:60px auto;">
-        <h2 style="text-align:center; color:#001f5b; font-size:2em; margin-bottom:20px;">Web Hosting Referral Earnings
-            Table</h2>
-        <p style="text-align:center; font-size:1.1em; margin-bottom:30px;">This table shows potential earnings for our
-            web hosting packages if you refer new customers. For every customer you refer (except your second, which is
-            credited to the company as a thank you for providing the platform), you earn a daily payout based on their
-            chosen package. This is a standard referral program for web hosting services, not a financial scheme. For
-            questions, <a href="/contact-staff" style="color:#e60000; text-decoration:underline;">talk to staff</a>.</p>
-        <div style="overflow-x:auto;">
-            <table class="earnings-table">
-                <thead>
-                    <tr>
-                        <th>Package</th>
-                        <th>Referrals</th>
-                        <th>Daily</th>
-                        <th>Weekly</th>
-                        <th>Monthly</th>
-                        <th>Yearly</th>
-                    </tr>
-                </thead>
-                <tbody id="earningsTableBody"></tbody>
-            </table>
-            <style>
-                /* ...existing styles... */
-                .earnings-table {
-                    width: 100%;
-                    border-collapse: collapse;
-                    background: #fff;
-                    border-radius: 12px;
-                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-                    margin-top: 20px;
-                    font-size: 1.05em;
-                }
-
-                .earnings-table th,
-                .earnings-table td {
-                    border: 1.5px solid #e60000;
-                    padding: 10px 8px;
-                    text-align: center;
-                    vertical-align: middle;
-                }
-
-                .earnings-table th {
-                    background: #e60000;
-                    color: #fff;
-                    font-weight: bold;
-                    border-bottom: 3px solid #001f5b;
-                }
-
-                .earnings-table tr:nth-child(even) td {
-                    background: #f9f9f9;
-                }
-
-                .earnings-table tr:hover td {
-                    background: #ffeaea;
-                }
-            </style>
-        </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        // Render PayPal buttons for all packages
-        const packageButtons = [
-            { id: 'starter', price: 20, label: 'Starter' },
-            { id: 'basic', price: 49, label: 'Basic' },
-            { id: 'pro', price: 99, label: 'Pro' },
-            { id: 'elite', price: 299, label: 'Elite' },
-            { id: 'empire', price: 499, label: 'Empire' },
-            { id: 'starter1000', price: 1000, label: 'Starter 1000' },
-            { id: 'ultra2000', price: 2000, label: 'Ultra 2000' }
-        ];
-        // Affiliate link check: require ?ref= in URL
-        function getAffiliateCode() {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get('ref');
-        }
-
-        function showOrHidePayButtons() {
-            const affiliateCode = getAffiliateCode();
-            const payButtons = document.querySelectorAll('.paypal-button-container, .paypal-label');
-            const joinMsgId = 'affiliate-required-msg';
-            let joinMsg = document.getElementById(joinMsgId);
-            if (!affiliateCode) {
-                payButtons.forEach(el => el.style.display = 'none');
-                if (!joinMsg) {
-                    joinMsg = document.createElement('div');
-                    joinMsg.id = joinMsgId;
-                    joinMsg.style = 'color:#e60000; font-size:1.2em; text-align:center; margin:20px 0; font-weight:bold;';
-                    joinMsg.innerText = 'A valid affiliate link is required to join. Please request an invitation from an authorized affiliate.';
-                    const grid = document.querySelector('.packages-grid');
-                    if (grid) grid.parentNode.insertBefore(joinMsg, grid);
-                }
-            } else {
-                payButtons.forEach(el => el.style.display = '');
-                if (joinMsg) joinMsg.remove();
-            }
-        }
-
-        packageButtons.forEach(pkg => {
-            if (window.paypal) {
-                window.paypal.Buttons({
-                    style: {
-                        color: 'blue',
-                        shape: 'rect',
-                        label: 'paypal',
-                        height: 55,
-                        layout: 'vertical'
-                    },
-                    createOrder: function (data, actions) {
-                        let currency = 'USD';
-                        return actions.order.create({
-                            purchase_units: [{
-                                amount: { value: pkg.price.toString(), currency_code: currency },
-                                description: pkg.label + ' Web Hosting Package (Admin Fee)'
-                            }]
-                        });
-                    },
-                    onApprove: function (data, actions) {
-                        return actions.order.capture().then(function (details) {
-                            alert('Thank you, ' + details.payer.name.given_name + '! Your payment for the ' + pkg.label + ' web hosting package was successful.');
-                            // Optionally, redirect or call your backend to finalize registration or Zapier webhook
-                        });
-                    }
-                }).render('#paypal-' + pkg.id);
-            } else {
-                const container = document.getElementById('paypal-' + pkg.id);
-                if (container) {
-                    container.innerHTML = '<div style="color:red; font-weight:bold;">PayPal SDK not loaded</div>';
-                }
-            }
-        });
-
-        // Run affiliate check on load
-        document.addEventListener('DOMContentLoaded', showOrHidePayButtons);
-        // Earnings Table
-        document.addEventListener('DOMContentLoaded', function () {
-            const packages = [
-                { id: 'starter', price: 20, label: 'Starter' },
-                { id: 'basic', price: 49, label: 'Basic' },
-                { id: 'pro', price: 99, label: 'Pro' },
-                { id: 'elite', price: 299, label: 'Elite' },
-                { id: 'empire', price: 499, label: 'Empire' },
-                { id: 'starter1000', price: 1000, label: 'Starter 1000' },
-                { id: 'ultra2000', price: 2000, label: 'Ultra 2000' }
-            ];
-            const referralCounts = [3, 5, 10, 15, 20, 50];
-            function calcEarnings(price, count) {
-                const paidReferrals = Math.max(count - 1, 0);
-                return {
-                    day: paidReferrals * price,
-                    week: paidReferrals * price * 7,
-                    month: paidReferrals * price * 30,
-                    year: paidReferrals * price * 365
-                };
-            }
-            const tbody = document.getElementById('earningsTableBody');
-            packages.forEach(pkg => {
-                referralCounts.forEach(count => {
-                    const earnings = calcEarnings(pkg.price, count);
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${pkg.label} ($${pkg.price}/ref)</td>
-                        <td>${count}</td>
-                        <td>$${earnings.day.toLocaleString()}</td>
-                        <td>$${earnings.week.toLocaleString()}</td>
-                        <td>$${earnings.month.toLocaleString()}</td>
-                        <td>$${earnings.year.toLocaleString()}</td>
-                    `;
-                    tbody.appendChild(row);
-                });
-            });
-        });
-    </script>
+    <!-- Referral earnings table hidden for public view -->
+    <!-- Payment and affiliate scripts hidden for public view -->
 </body>
 
 </html>

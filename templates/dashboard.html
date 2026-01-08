@@ -15,22 +15,28 @@
 </head>
 <body>
     <div class="dashboard-container">
-        <h2>Welcome, <span id="dashboard-username">User</span>!</h2>
+        <form action="/logout" method="get" style="margin-bottom:0;">
+            <button style="background:#e60000;color:#fff;border:none;border-radius:6px;padding:10px 24px;font-size:1em;font-weight:bold;cursor:pointer;float:right;" type="submit">Logout</button>
+        </form>
+        <h2>Welcome, {{ user.username }}!</h2>
         <div class="info">
-            <div>Your referral link:</div>
-            <div class="referral-link" id="referral-link">https://seobrainai.com/?ref=USERNAME</div>
+            <strong>Your affiliate link:</strong>
+            <div class="referral-link">https://seobrain.com/ref/{{ user.username }}</div>
         </div>
         <div class="info">
-            <div>You have <span class="referral-count" id="referral-count">0</span> referrals.</div>
+            <strong>Set up your PayPal for payouts:</strong>
+            <ol>
+                <li>Go to <b>Settings</b> in your dashboard.</li>
+                <li>Find <b>Payout Method</b> and enter your PayPal email.</li>
+                <li>Click <b>Save</b>. You’re now ready to receive payments!</li>
+            </ol>
+        </div>
+        <div class="info">
+            <strong>Your current package:</strong> {{ user.package_id or 'Starter' }}
+        </div>
+        <div class="info">
+            <strong>Upgrade your package:</strong> Visit the <a href="/packages">Packages</a> page to see all options and upgrade anytime.
         </div>
     </div>
-    <script>
-        // Placeholder: Replace with actual user data from backend
-        const username = localStorage.getItem('username') || 'User';
-        const referralCount = localStorage.getItem('referralCount') || 0;
-        document.getElementById('dashboard-username').innerText = username;
-        document.getElementById('referral-link').innerText = `https://seobrainai.com/?ref=${username}`;
-        document.getElementById('referral-count').innerText = referralCount;
-    </script>
 </body>
 </html>

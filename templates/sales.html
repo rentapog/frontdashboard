@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales | SEOBRAIN</title>
+    <style>
+        body { background: #f5f7fa; color: #001f5b; font-family: Arial, sans-serif; }
+        .sales-container { max-width: 1200px; margin: 60px auto; background: #fff; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,31,91,0.10); padding: 40px 30px; }
+        h2 { color: #e60000; text-align: center; }
+        .packages-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 48px; margin-top: 40px; }
+        .package-card { background: #fff; border-radius: 24px; box-shadow: 0 8px 32px rgba(0, 31, 91, 0.18); border: 3.5px solid #e60000; padding: 44px 32px 38px 32px; text-align: center; position: relative; margin-bottom: 24px; }
+        .package-card .badge { position: absolute; top: -22px; right: 32px; background: #ffd700; color: #001f5b; padding: 14px 28px; border-radius: 32px; font-weight: bold; font-size: 1.1em; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18); border: 2px solid #e60000; }
+        .affiliate-link { margin: 18px 0; background: #f7f7ff; padding: 10px; border-radius: 8px; font-size: 1.08em; }
+    </style>
+</head>
+<body>
+    <div class="sales-container">
+        <h2>Share Your Affiliate Packages</h2>
+        <div class="packages-grid">
+            {% for package in packages %}
+            <div class="package-card">
+                <div class="badge">{{ package.name }}</div>
+                <h3>{{ package.name }}</h3>
+                <div class="promo-price">${{ package.price }}</div>
+                <ul>
+                    {% for feature in package.features %}
+                    <li>{{ feature }}</li>
+                    {% endfor %}
+                </ul>
+                <div class="affiliate-link">
+                    <strong>Your affiliate link:</strong><br>
+                    https://seobrain.com/ref/{{ user.username }}?package={{ package.id }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

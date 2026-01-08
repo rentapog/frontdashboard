@@ -1,4 +1,4 @@
-from app import db
+from .app import db
 from datetime import datetime
 
 class User(db.Model):
@@ -9,6 +9,7 @@ class User(db.Model):
     referrer_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     join_date = db.Column(db.DateTime, default=datetime.utcnow)
     is_active = db.Column(db.Boolean, default=True)
+    password_hash = db.Column(db.String(128))
     referrals = db.relationship('User', backref=db.backref('referrer', remote_side=[id]), lazy='dynamic')
 
 class Package(db.Model):

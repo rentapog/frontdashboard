@@ -1,15 +1,91 @@
+# --- Blueprint must be defined before any @bp.route decorators ---
+from flask import Blueprint, session, redirect, url_for, render_template
+bp = Blueprint('main', __name__)
+# Sales page route
+@bp.route('/sales')
+def sales():
+    if 'user_id' not in session:
+        return redirect(url_for('main.login'))
+    user = User.query.get(session['user_id'])
+    packages = Package.query.all()
+    # Prepare features for each package (assuming a 'features' attribute or list)
+    package_list = []
+    for pkg in packages:
+        # If features is a string, split by newline or comma; else use as is
+        features = getattr(pkg, 'features', [])
+        if isinstance(features, str):
+            features = [f.strip() for f in features.split('\n') if f.strip()]
+        package_list.append({
+            'id': pkg.id,
+            'name': pkg.name,
+            'price': pkg.price,
+            'features': features
+        })
+    return render_template('sales.html', user=user, packages=package_list)
+# --- Blueprint must be defined before any @bp.route decorators ---
+from flask import Blueprint, session, redirect, url_for, render_template
+bp = Blueprint('main', __name__)
+# Login route
+@bp.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        user = User.query.filter_by(username=username).first()
+        if user and user.password_hash == hashlib.sha256(password.encode()).hexdigest():
+            session['user_id'] = user.id
+            session['username'] = user.username
+            return redirect(url_for('main.dashboard'))
+        return render_template('login.html', message='Invalid username or password.')
+    return render_template('login.html')
+
+# Logout route
+@bp.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('main.login'))
+
+# Dashboard route (protected)
+@bp.route('/dashboard/<username>')
+def dashboard(username):
+    if 'user_id' not in session or session.get('username') != username:
+        return redirect(url_for('main.login'))
+    user = User.query.filter_by(username=username).first()
+    return render_template('dashboard.html', user=user)
+# Password reset route
+@bp.route('/reset-password', methods=['GET', 'POST'])
+def reset_password():
+    from flask import render_template, request
+    if request.method == 'POST':
+        email = request.form.get('email')
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            return render_template('reset_password.html', message='No account found with that email.')
+        # Generate a reset token (simple, for demo; use JWT or similar for production)
+        import secrets
+        token = secrets.token_urlsafe(32)
+        # Store token in user session or DB if you want to validate later (not shown here)
+        reset_link = f"https://admin.seobrainai.com/reset-password/{token}"
+        subject = "Password Reset Request"
+        body = f"Hello,\n\nTo reset your password, click the link below:\n{reset_link}\n\nIf you did not request this, ignore this email."
+        send_resend_email(email, subject, body)
+        return render_template('reset_password.html', message='A reset link has been sent to your email.')
+    return render_template('reset_password.html')
+import secrets
+import hashlib
 import requests
 import os
 # Utility function to send email via Resend API
-def send_resend_email(to_email, subject, body_text, from_email="seobrainai@yourdomain.com"):
+def send_resend_email(to_email, subject, body_text, from_email="noreply@admin.seobrainai.com"):
     api_key = os.getenv("RESEND_API_KEY")
     url = "https://api.resend.com/emails"
     headers = {
         "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json"
     }
+    # Always use verified sender address
     data = {
-        "from": from_email,
+        "from": "noreply@admin.seobrainai.com",
         "to": [to_email],
         "subject": subject,
         "text": body_text
@@ -27,8 +103,8 @@ import base64
 import hashlib
 import hmac
 from flask import Blueprint, request, jsonify, current_app
-from app import db
-from models import User, Referral, Package, UserPackage, Payment
+from .app import db
+from .models import User, Referral, Package, UserPackage, Payment
 from datetime import datetime
 
 bp = Blueprint('main', __name__)
@@ -89,7 +165,10 @@ def register():
         return jsonify({'error': 'Missing required fields'}), 400
     if User.query.filter_by(email=email).first() or User.query.filter_by(username=username).first():
         return jsonify({'error': 'User already exists'}), 400
-    user = User(email=email, username=username)
+    # Generate random password and hash it
+    password = secrets.token_urlsafe(10)
+    password_hash = hashlib.sha256(password.encode()).hexdigest()
+    user = User(email=email, username=username, password_hash=password_hash)
     # Always pay admin fee to admin
     if admin_user:
         admin_payment = Payment(
@@ -119,15 +198,36 @@ def register():
         db.session.add(referral)
         db.session.commit()
     # Send welcome email via Resend
-    subject = "Welcome to SEOBRAIN!"
+    subject = "Welcome to SEOBRAIN! Your Dashboard & Next Steps"
+    dashboard_link = f"https://admin.seobrainai.com/dashboard/{username}"
+    packages_summary = """
+Starter: 10 GB SSD Storage – $20
+Basic: 25 GB SSD Storage – $49
+Pro: 50 GB SSD Storage – $99
+Elite: 100 GB SSD Storage – $299
+Empire: 250 GB SSD Storage – $499
+Starter 1000: 500 GB SSD Storage – $1,000
+Ultra 2000: 1 TB SSD Storage – $2,000
+"""
     body = f"""
 Hello {first_name},
 
-Welcome to SEOBRAIN! Your account has been created successfully.
+Welcome to SEOBRAIN! Your account is ready.
 
-You can now access your AI SEO Toolkit and platform resources.
+Your login password: {password}
+Your dashboard: {dashboard_link}
 
-If you have any questions, reply to this email.
+What to do next:
+1. Log in to your dashboard using your username and password above.
+2. Explore your dashboard to see your affiliate link and available packages.
+3. To get paid, set up your PayPal account in your dashboard (go to 'Settings' > 'Payout Method' and enter your PayPal email).
+4. Share your affiliate link to invite others and earn rewards automatically.
+5. Upgrade your package anytime from your dashboard for more features and higher earnings.
+
+Available Packages:
+{packages_summary}
+
+If you need help, reply to this email or visit our support page.
 
 Best regards,
 The SEOBRAIN Team
@@ -141,7 +241,7 @@ def get_referrals(user_id):
     return jsonify({'referral_count': count})
 
 
-from paypal import create_paypal_order
+from .paypal import create_paypal_order
 
 # Initiate a PayPal payment (activation or daily)
 @bp.route('/pay', methods=['POST'])
