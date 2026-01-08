@@ -104,7 +104,7 @@ import hashlib
 import hmac
 from flask import Blueprint, request, jsonify, current_app
 from app import db
-from .models import User, Referral, Package, UserPackage, Payment
+from models import User, Referral, Package, UserPackage, Payment
 from datetime import datetime
 
 bp = Blueprint('main', __name__)
