@@ -241,7 +241,7 @@ def get_referrals(user_id):
     return jsonify({'referral_count': count})
 
 
-from .paypal import create_paypal_order
+from paypal import create_paypal_order
 
 # Initiate a PayPal payment (activation or daily)
 @bp.route('/pay', methods=['POST'])
