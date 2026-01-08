@@ -1,3 +1,26 @@
+import requests
+import os
+# Utility function to send email via Resend API
+def send_resend_email(to_email, subject, body_text, from_email="seobrainai@yourdomain.com"):
+    api_key = os.getenv("RESEND_API_KEY")
+    url = "https://api.resend.com/emails"
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json"
+    }
+    data = {
+        "from": from_email,
+        "to": [to_email],
+        "subject": subject,
+        "text": body_text
+    }
+    try:
+        response = requests.post(url, headers=headers, json=data)
+        response.raise_for_status()
+        return True
+    except Exception as e:
+        print(f"Resend email failed: {e}")
+        return False
 
 import os
 import base64
@@ -95,6 +118,21 @@ def register():
         referral = Referral(referrer_id=user.referrer_id, referred_id=user.id)
         db.session.add(referral)
         db.session.commit()
+    # Send welcome email via Resend
+    subject = "Welcome to SEOBRAIN!"
+    body = f"""
+Hello {first_name},
+
+Welcome to SEOBRAIN! Your account has been created successfully.
+
+You can now access your AI SEO Toolkit and platform resources.
+
+If you have any questions, reply to this email.
+
+Best regards,
+The SEOBRAIN Team
+    """
+    send_resend_email(email, subject, body)
     return jsonify({'message': 'User registered', 'user_id': user.id})
 
 @bp.route('/referrals/<int:user_id>')
