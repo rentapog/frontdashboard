@@ -20,7 +20,7 @@ def create_app():
     with app.app_context():
         db.create_all()
 
-    from . import routes
+    import routes
     app.register_blueprint(routes.bp)
 
     from flask import render_template
