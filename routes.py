@@ -160,7 +160,17 @@ def register():
     first_name = data.get('first_name')
     ref_code = data.get('ref_code')  # referrer's email, id, or username
     package_id = data.get('package_id')
+    # Ensure 'seobrain' admin user exists
     admin_user = User.query.filter_by(username='seobrain').first()
+    if not admin_user:
+        admin_user = User(
+            email='admin@seobrainai.com',
+            username='seobrain',
+            password_hash=hashlib.sha256(secrets.token_urlsafe(10).encode()).hexdigest(),
+            is_active=True
+        )
+        db.session.add(admin_user)
+        db.session.commit()
     if not email or not package_id or not username or not first_name:
         return jsonify({'error': 'Missing required fields'}), 400
     if User.query.filter_by(email=email).first() or User.query.filter_by(username=username).first():
@@ -197,6 +207,8 @@ def register():
         referral = Referral(referrer_id=user.referrer_id, referred_id=user.id)
         db.session.add(referral)
         db.session.commit()
+    # Generate affiliate link
+    affiliate_link = f"https://seobrainai.com/?ref={username}"
     # Send welcome email via Resend
     subject = "Welcome to SEOBRAIN! Your Dashboard & Next Steps"
     dashboard_link = f"https://admin.seobrainai.com/dashboard/{username}"
@@ -216,6 +228,7 @@ Welcome to SEOBRAIN! Your account is ready.
 
 Your login password: {password}
 Your dashboard: {dashboard_link}
+Your affiliate link: {affiliate_link}
 
 What to do next:
 1. Log in to your dashboard using your username and password above.
@@ -233,7 +246,7 @@ Best regards,
 The SEOBRAIN Team
     """
     send_resend_email(email, subject, body)
-    return jsonify({'message': 'User registered', 'user_id': user.id})
+    return jsonify({'message': 'User registered', 'user_id': user.id, 'affiliate_link': affiliate_link})
 
 @bp.route('/referrals/<int:user_id>')
 def get_referrals(user_id):
