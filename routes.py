@@ -95,29 +95,6 @@ def register():
         referral = Referral(referrer_id=user.referrer_id, referred_id=user.id)
         db.session.add(referral)
         db.session.commit()
-    # Send welcome email
-    from flask_mail import Message
-    from app import mail
-    msg = Message(
-        subject="Welcome to SEOBRAIN!",
-        recipients=[email],
-        body=f"""
-Hello {first_name},
-
-Welcome to SEOBRAIN! Your account has been created successfully.
-
-You can now access your AI SEO Toolkit and platform resources.
-
-If you have any questions, reply to this email.
-
-Best regards,
-The SEOBRAIN Team
-        """
-    )
-    try:
-        mail.send(msg)
-    except Exception as e:
-        print(f"Email send failed: {e}")
     return jsonify({'message': 'User registered', 'user_id': user.id})
 
 @bp.route('/referrals/<int:user_id>')
