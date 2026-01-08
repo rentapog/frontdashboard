@@ -13,7 +13,8 @@ bp = Blueprint('main', __name__)
 # Root route for health check or homepage
 @bp.route('/')
 def index():
-    return 'API is running!'
+    from flask import render_template
+    return render_template('packages.html')
 
 # PayPal Webhook endpoint
 @bp.route('/webhook/paypal', methods=['POST'])
