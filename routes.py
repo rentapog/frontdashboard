@@ -1,6 +1,80 @@
-# --- Blueprint must be defined before any @bp.route decorators ---
-from flask import Blueprint, session, redirect, url_for, render_template
+# Route for /api-docs
+@bp.route('/api-docs')
+def api_docs():
+    return render_template('api_docs.html')
+
+# Route for /affiliate-program
+@bp.route('/affiliate-program')
+def affiliate_program():
+    return render_template('affiliate_program.html')
+
+from flask import Blueprint, session, redirect, url_for, render_template, request, jsonify, current_app
+import secrets
+import hashlib
+import requests
+import os
+import base64
+import hmac
+from datetime import datetime
+from .app import db
+from .models import User, Referral, Package, UserPackage, Payment
+from .paypal import create_paypal_order
+
 bp = Blueprint('main', __name__)
+
+# Route for /user-agreement
+@bp.route('/user-agreement')
+def user_agreement():
+    return render_template('user_agreement.html')
+
+# Route for /cookie-policy
+@bp.route('/cookie-policy')
+def cookie_policy():
+    return render_template('cookie_policy.html')
+
+# Route for /blog
+@bp.route('/blog')
+def blog():
+    return render_template('blog.html')
+
+# Route for /careers
+@bp.route('/careers')
+def careers():
+    return render_template('careers.html')
+
+from flask import Blueprint, session, redirect, url_for, render_template, request, jsonify, current_app
+import secrets
+import hashlib
+import requests
+import os
+import base64
+import hmac
+from datetime import datetime
+from .app import db
+from .models import User, Referral, Package, UserPackage, Payment
+from .paypal import create_paypal_order
+
+bp = Blueprint('main', __name__)
+
+# Route for /payment to render the payment page
+@bp.route('/payment')
+def payment():
+    return render_template('payment.html')
+
+# Route for /privacy-policy
+@bp.route('/privacy-policy')
+def privacy_policy():
+    return render_template('privacy_policy.html')
+
+# Route for /terms
+@bp.route('/terms')
+def terms():
+    return render_template('terms.html')
+# Route for /packages to render the main packages page
+@bp.route('/packages')
+def packages():
+    return render_template('packages.html')
+# --- Blueprint must be defined before any @bp.route decorators ---
 # Sales page route
 @bp.route('/sales')
 def sales():
@@ -23,8 +97,6 @@ def sales():
         })
     return render_template('sales.html', user=user, packages=package_list)
 # --- Blueprint must be defined before any @bp.route decorators ---
-from flask import Blueprint, session, redirect, url_for, render_template
-bp = Blueprint('main', __name__)
 # Login route
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
@@ -98,16 +170,7 @@ def send_resend_email(to_email, subject, body_text, from_email="noreply@admin.se
         print(f"Resend email failed: {e}")
         return False
 
-import os
-import base64
-import hashlib
-import hmac
-from flask import Blueprint, request, jsonify, current_app
-from app import db
-from models import User, Referral, Package, UserPackage, Payment
-from datetime import datetime
-
-bp = Blueprint('main', __name__)
+ # ...existing code...
 
 # Root route for health check or homepage
 @bp.route('/')
@@ -254,8 +317,6 @@ def get_referrals(user_id):
     return jsonify({'referral_count': count})
 
 
-from paypal import create_paypal_order
-
 # Initiate a PayPal payment (activation or daily)
 @bp.route('/pay', methods=['POST'])
 def pay():
@@ -293,6 +354,10 @@ def activate_daily(user_id):
     referrals = Referral.query.filter_by(referrer_id=user.id).all()
     paid_count = 0
     for r in referrals:
+        # Query for admin_user inside this function to avoid undefined variable
+        admin_user = User.query.filter_by(username='seobrain').first()
+        if not admin_user:
+            continue
         payment = Payment.query.filter_by(payer_id=r.referred_id, payee_id=admin_user.id, payment_type='activation').first()
         if payment:
             paid_count += 1

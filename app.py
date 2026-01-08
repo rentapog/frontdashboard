@@ -16,11 +16,11 @@ def create_app():
     from flask_cors import CORS
     CORS(app)
 
-    import models
+    from . import models
     with app.app_context():
         db.create_all()
 
-    import routes
+    from . import routes
     app.register_blueprint(routes.bp)
 
     from flask import render_template
