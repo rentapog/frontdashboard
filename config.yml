@@ -1,0 +1,7 @@
+tunnel: a5693473-3983-46de-b21e-6b011abea28a
+credentials-file: C:\Users\user\.cloudflared\a5693473-3983-46de-b21e-6b011abea28a.json
+
+ingress:
+  - hostname: seobrainai.com
+    service: http://127.0.0.1:5000
+  - service: http_status:404

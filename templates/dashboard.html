@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | RizzosAI</title>
+    <style>
+        body { background: #f5f7fa; color: #001f5b; font-family: Arial, sans-serif; }
+        .dashboard-container { max-width: 600px; margin: 60px auto; background: #fff; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,31,91,0.10); padding: 40px 30px; }
+        h2 { color: #e60000; text-align: center; }
+        .info { margin: 30px 0; font-size: 1.2em; }
+        .referral-link { background: #f0f0f0; border-radius: 8px; padding: 12px; margin: 18px 0; font-size: 1.1em; word-break: break-all; }
+        .referral-count { font-size: 1.3em; color: #0070ba; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <h2>Welcome, <span id="dashboard-username">User</span>!</h2>
+        <div class="info">
+            <div>Your referral link:</div>
+            <div class="referral-link" id="referral-link">https://seobrainai.com/?ref=USERNAME</div>
+        </div>
+        <div class="info">
+            <div>You have <span class="referral-count" id="referral-count">0</span> referrals.</div>
+        </div>
+    </div>
+    <script>
+        // Placeholder: Replace with actual user data from backend
+        const username = localStorage.getItem('username') || 'User';
+        const referralCount = localStorage.getItem('referralCount') || 0;
+        document.getElementById('dashboard-username').innerText = username;
+        document.getElementById('referral-link').innerText = `https://seobrainai.com/?ref=${username}`;
+        document.getElementById('referral-count').innerText = referralCount;
+    </script>
+</body>
+</html>

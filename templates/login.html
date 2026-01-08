@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | RizzosAI</title>
+    <style>
+        body { background: #f5f7fa; color: #001f5b; font-family: Arial, sans-serif; }
+        .login-container { max-width: 400px; margin: 80px auto; background: #fff; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,31,91,0.10); padding: 40px 30px; }
+        h2 { color: #e60000; text-align: center; }
+        .form-group { margin-bottom: 22px; }
+        label { display: block; margin-bottom: 7px; font-weight: bold; }
+        input[type="text"], input[type="password"] { width: 100%; padding: 10px; border-radius: 6px; border: 1.5px solid #e60000; font-size: 1em; }
+        button { width: 100%; background: #e60000; color: #fff; border: none; border-radius: 6px; padding: 12px; font-size: 1.1em; font-weight: bold; cursor: pointer; }
+        .reset-link { display: block; text-align: right; margin-top: 10px; color: #0070ba; text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form method="POST">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+        <a class="reset-link" href="/reset-password">Forgot password?</a>
+    </div>
+</body>
+</html>
