@@ -16,7 +16,7 @@ def create_app():
     from flask_cors import CORS
     CORS(app)
 
-    from . import models
+    import models
     with app.app_context():
         db.create_all()
 
