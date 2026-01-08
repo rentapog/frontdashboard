@@ -139,11 +139,8 @@
     </div>
 
 
-    <!-- Registration form below intro/wording and above payment packages -->
-
-    <!-- Enticing email capture box -->
-    <div
-        style="max-width:500px;margin:40px auto 30px auto;background:#fff;border-radius:16px;box-shadow:0 2px 10px rgba(0,0,0,0.08);padding:36px 32px;">
+    <!-- Registration form only visible on affiliate links (when ?ref= is present) -->
+    <div id="affiliate-form-container" style="display:none;max-width:500px;margin:40px auto 30px auto;background:#fff;border-radius:16px;box-shadow:0 2px 10px rgba(0,0,0,0.08);padding:36px 32px;">
         <form id="email-capture-form" style="margin-bottom:0;">
             <div style="margin-bottom:18px;">
                 <label for="first_name" style="font-weight:bold;">First Name</label>
@@ -161,14 +158,20 @@
             <button type="submit" style="width:100%;background:#e60000;color:#fff;border:none;border-radius:6px;padding:12px;font-size:1.1em;font-weight:bold;cursor:pointer;">Get My Free Toolkit</button>
             <div style="margin-top:12px;color:#001f5b;font-size:0.98em;text-align:center;">No spam. Your free resources will be sent instantly!</div>
         </form>
-        <script>
+    </div>
+    <script>
+    // Show the form only if ?ref= is present in the URL
+    if (window.location.search.includes('ref=')) {
+        document.getElementById('affiliate-form-container').style.display = 'block';
+    }
+    if (document.getElementById('email-capture-form')) {
         document.getElementById('email-capture-form').addEventListener('submit', function(e) {
             e.preventDefault();
             const first_name = document.getElementById('first_name').value;
             const username = document.getElementById('username').value;
             const email = document.getElementById('email').value;
             const package_id = document.getElementById('package_id').value;
-            fetch('http://127.0.0.1:5000/register', {
+            fetch('https://api.seobrainai.com/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -183,8 +186,8 @@
                 alert('Registration failed. Please try again.');
             });
         });
-        </script>
-    </div>
+    }
+    </script>
     <div class="packages-grid">
         <div class="package-card">
             <div class="badge">Entry</div>
