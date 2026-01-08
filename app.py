@@ -14,11 +14,11 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
 
-    from . import models
+    import models
     with app.app_context():
         db.create_all()
 
-    from . import routes
+    import routes
     app.register_blueprint(routes.bp)
 
     from flask import render_template
